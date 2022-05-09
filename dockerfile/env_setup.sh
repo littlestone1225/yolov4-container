@@ -56,8 +56,8 @@ then
     lCmdList=(
                 "cd $AOI_DIR/darknet" \
                 "export AOI_DIR_NAME=$AOI_DIR" \
-                "make clean" \
-                "make"
+                "sudo make clean" \
+                "sudo make"
              )
     Fun_EvalCmd "${lCmdList[*]}"
 else

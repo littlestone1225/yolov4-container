@@ -137,7 +137,7 @@ if __name__ == "__main__":
     config_dict['NMS_Iou_threshold']    = check_env(0.75,'NMS_Iou_threshold')
     config_dict['Edge_limit']           = check_env(10,'Edge_limit')
     config_dict['inference_Batch_size'] = check_env(1,'inference_Batch_size')
-    config_dict['Score_threshold']      = check_env(0.01,'Score_threshold')
+    config_dict['Score_threshold']      = check_env(0.001,'Score_threshold')
     config_dict['Iou_threshold']        = check_env(0.1,'Iou_threshold')
 
 

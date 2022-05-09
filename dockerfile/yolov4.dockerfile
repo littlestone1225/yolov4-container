@@ -6,10 +6,10 @@
 FROM nvidia/cuda:11.1-cudnn8-devel-ubuntu18.04
 # FROM nvidia/cuda:11.3.1-cudnn8-devel-ubuntu18.04
 
-ARG USER=adev
-ARG UID=999
-ARG GID=998
-ARG AOI_DIR_NAME=""
+ARG USER
+ARG UID
+ARG GID
+ARG AOI_DIR_NAME
 
 ENV DISPLAY :11
 ENV DEBIAN_FRONTEND noninteractive
@@ -72,12 +72,12 @@ RUN pip3 install opencv-python==4.1.1.26 && \
 
 
 # Set the home directory to our user's home.
-ENV USER=$USER
+ENV USER=${USER}
 ENV HOME="/home/$USER"
-ENV AOI_DIR_NAME=$AOI_DIR_NAME
+ENV AOI_DIR_NAME=${AOI_DIR_NAME}
 
 
-ENV ORI_dataset_path=$HOME"/"$AOI_DIR_NAME"/dataset"
+ENV ORI_dataset_path=${HOME}"/"${AOI_DIR_NAME}"/dataset"
 ENV project_name="pcb_512"
 
 # training
@@ -109,22 +109,22 @@ ENV NMS_flag=1
 ENV NMS_Iou_threshold=0.75
 ENV Edge_limit=20
 ENV inference_Batch_size=1
-ENV Score_threshold=0.01
+ENV Score_threshold=0.001
 ENV Iou_threshold=0.1
 
 RUN echo "Create $USER account" &&\
     # Create the home directory for the new $USER
-    mkdir -p $HOME &&\
+    mkdir -p ${HOME} &&\
     # Create an $USER so our program doesn't run as root.
-    groupadd -r -g $GID $USER &&\
-    useradd -r -g $USER -G sudo -u $UID -d $HOME -s /sbin/nologin -c "Docker image user" $USER &&\
+    groupadd -r -g ${GID} ${USER} &&\
+    useradd -r -g ${USER} -G sudo -u ${UID} -d ${HOME} -s /sbin/nologin -c "Docker image user" ${USER} &&\
     # Set root user no password
     mkdir -p /etc/sudoers.d &&\
-    echo "$USER ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/$USER && \
-    chmod 0440 /etc/sudoers.d/$USER && \
+    echo "$USER ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/${USER} && \
+    chmod 0440 /etc/sudoers.d/${USER} && \
     # Chown all the files to the $USER
-    chown -R $USER:$USER $HOME
+    sudo chown -R ${USER}:${USER} ${HOME}
 
 # Change to the $USER
-WORKDIR $HOME
-USER $USER
+WORKDIR ${HOME}
+USER ${USER}

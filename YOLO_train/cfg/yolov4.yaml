@@ -37,9 +37,9 @@ yolo_valid_csv: yolo_valid.csv
 valid_eval_csv: /home/adev/yolov4-container/YOLO_train/result/valid_eval.csv
 test_eval_csv: /home/adev/yolov4-container/YOLO_train/result/test_eval.csv
 pretrained: /home/adev/yolov4-container/YOLO_train/cfg/yolov4.conv.137
-NMS_flag: 1
-NMS_Iou_threshold: 0.75
-Edge_limit: 10
-inference_Batch_size: 1
-Score_threshold: 0.01
-Iou_threshold: 0.1
+NMS_flag: '1'
+NMS_Iou_threshold: '0.75'
+Edge_limit: '20'
+inference_Batch_size: '1'
+Score_threshold: '0.001'
+Iou_threshold: '0.1'

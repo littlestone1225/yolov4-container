@@ -40,14 +40,14 @@ width = int(yml['width'])
 height = int(yml['height'])
 Margin = 100
 
-NMS_flag = yml['NMS_flag']
+NMS_flag = int(yml['NMS_flag'])
 NMS_Iou_threshold = float(yml['NMS_Iou_threshold'])
-Edge_limit = yml['Edge_limit']
+Edge_limit = int(yml['Edge_limit'])
 
-Batch_size = yml['inference_Batch_size']
+Batch_size = int(yml['inference_Batch_size'])
 
+# inference
 Score_threshold = float(yml['Score_threshold'])
-
 
 #######################################################################
 

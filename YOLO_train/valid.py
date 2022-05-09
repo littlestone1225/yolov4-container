@@ -349,6 +349,7 @@ def load_darknet(Yolo_cfg_file, Yolo_data_file, Yolo_weights_file, Batch_size):
 
     return network, class_names, class_colors
 
+
 def free_darknet(net):
     darknet.free_network_ptr(net)
     return
@@ -458,7 +459,6 @@ if __name__ == '__main__':
             yolo_data = batch_detection(crop_image_list, crop_rect_list, img, network, class_names, class_colors, \
                                         Score_threshold, NMS_flag,Edge_limit,Iou_threshold ,.5, .45, Batch_size)
 
-        print(yolo_data)
         detect = time.time()
 
         # generate json
