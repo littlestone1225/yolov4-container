@@ -1,0 +1,26 @@
+{
+  "version": "4.5.6",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "appearance",
+      "points": [
+        [
+          289,
+          274
+        ],
+        [
+          339,
+          324
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "rectangle",
+      "flags": {}
+    }
+  ],
+  "imagePath": "LKA3253108_LEI5339DA_9696S43504E-012_600_025_1279_701_1329_751.jpg",
+  "imageData": null,
+  "imageHeight": 512,
+  "imageWidth": 512
+}

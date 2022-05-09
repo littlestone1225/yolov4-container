@@ -1,0 +1,42 @@
+{
+  "version": "4.5.6",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "bridge",
+      "points": [
+        [
+          65,
+          273
+        ],
+        [
+          133,
+          311
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "rectangle",
+      "flags": {}
+    },
+    {
+      "label": "bridge",
+      "points": [
+        [
+          258,
+          276
+        ],
+        [
+          320,
+          350
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "rectangle",
+      "flags": {}
+    }
+  ],
+  "imagePath": "LKD0124818_002_994_2282_1062_2320.jpg",
+  "imageData": null,
+  "imageHeight": 512,
+  "imageWidth": 512
+}

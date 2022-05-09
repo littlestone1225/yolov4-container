@@ -1,0 +1,42 @@
+{
+  "version": "4.5.6",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "excess_solder",
+      "points": [
+        [
+          391,
+          33
+        ],
+        [
+          423,
+          65
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "rectangle",
+      "flags": {}
+    },
+    {
+      "label": "excess_solder",
+      "points": [
+        [
+          462,
+          34
+        ],
+        [
+          494,
+          66
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "rectangle",
+      "flags": {}
+    }
+  ],
+  "imagePath": "LKE0007352_006_769_3332_801_3364.jpg",
+  "imageData": null,
+  "imageHeight": 512,
+  "imageWidth": 512
+}

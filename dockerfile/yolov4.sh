@@ -7,8 +7,8 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 
 USER="adev"
-UIDCOSTUM="1002"
-GIDCOSTUM="1002"
+UIDCOSTUM="999"
+GIDCOSTUM="998"
 
 
 # Absolute path to this script.

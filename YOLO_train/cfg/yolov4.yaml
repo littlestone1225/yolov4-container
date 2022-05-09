@@ -17,7 +17,7 @@ subdivisions: '4'
 width: '512'
 height: '512'
 channels: '3'
-max_batches: '10000'
+max_batches: '500500'
 select_cfg: yolov4.cfg
 Option_config: '0'
 momentum: '-1'

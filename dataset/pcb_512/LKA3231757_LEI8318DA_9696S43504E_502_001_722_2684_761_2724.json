@@ -1,0 +1,42 @@
+{
+  "version": "4.5.6",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "elh",
+      "points": [
+        [
+          450,
+          127
+        ],
+        [
+          489,
+          168
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "rectangle",
+      "flags": {}
+    },
+    {
+      "label": "excess_solder",
+      "points": [
+        [
+          452,
+          299
+        ],
+        [
+          491,
+          339
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "rectangle",
+      "flags": {}
+    }
+  ],
+  "imagePath": "LKA3231757_LEI8318DA_9696S43504E_502_001_722_2684_761_2724.jpg",
+  "imageData": null,
+  "imageHeight": 512,
+  "imageWidth": 512
+}

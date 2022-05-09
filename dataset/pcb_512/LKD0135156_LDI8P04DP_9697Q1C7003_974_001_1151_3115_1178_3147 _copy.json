@@ -1,0 +1,26 @@
+{
+  "version": "4.5.6",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "elh",
+      "points": [
+        [
+          60,
+          205
+        ],
+        [
+          87,
+          237
+        ]
+      ],
+      "group_id": null,
+      "shape_type": "rectangle",
+      "flags": {}
+    }
+  ],
+  "imagePath": "LKD0135156_LDI8P04DP_9697Q1C7003_974_001_1151_3115_1178_3147.jpg",
+  "imageData": null,
+  "imageHeight": 512,
+  "imageWidth": 512
+}
