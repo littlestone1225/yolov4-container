@@ -79,6 +79,8 @@ ENV AOI_DIR_NAME=$AOI_DIR_NAME
 
 ENV ORI_dataset_path=$HOME"/"$AOI_DIR_NAME"/dataset"
 ENV project_name="pcb_512"
+
+# training
 ENV set_ratio=0.6
 ENV batch=4
 ENV subdivisions=4
@@ -102,6 +104,13 @@ ENV burn_in=-1
 ENV letter_box=-1
 ENV ema_alpha=-1
 
+# inference and valid
+ENV NMS_flag=1
+ENV NMS_Iou_threshold=0.75
+ENV Edge_limit=20
+ENV inference_Batch_size=1
+ENV Score_threshold=0.01
+ENV Iou_threshold=0.1
 
 RUN echo "Create $USER account" &&\
     # Create the home directory for the new $USER

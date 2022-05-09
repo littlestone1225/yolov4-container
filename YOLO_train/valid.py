@@ -349,7 +349,10 @@ def load_darknet(Yolo_cfg_file, Yolo_data_file, Yolo_weights_file, Batch_size):
 
     return network, class_names, class_colors
 
-    
+def free_darknet(net):
+    darknet.free_network_ptr(net)
+    return
+
 if __name__ == '__main__':
     # ========================== MY CONFIG =========================== #
 
@@ -383,7 +386,7 @@ if __name__ == '__main__':
     Margin = 100
 
 
-    Score_threshold = 0.01
+    Score_threshold = yml['height']
 
     NMS_flag = True
     Iou_threshold = 0.75

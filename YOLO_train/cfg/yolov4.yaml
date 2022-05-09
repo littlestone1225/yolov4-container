@@ -8,9 +8,9 @@ YOLO_dataset_path: /home/adev/yolov4-container/YOLO_train/yolov4_dataset
 YOLO_inference_path: /home/adev/yolov4-container/YOLO_train/result
 TRAIN_data_path: /home/adev/yolov4-container/YOLO_train/yolov4_dataset/train_data
 VAL_data_path: /home/adev/yolov4-container/YOLO_train/yolov4_dataset/valid_data
-TEST_data_path: /home/adev/yolov4-container/YOLO_train/yolov4_dataset/test_data
-yolov4_model_file_path: /home/adev/yolov4-container/YOLO_train/cfg/yolov4_2022_01_03.weights
-yolov4_best_model: /home/adev/yolov4-container/YOLO_train/cfg/pcb_512_final_2022-04-25.weights
+TEST_data_path: /home/adev/yolov4-container/YOLO_train/yolov4_dataset/valid_data
+yolov4_model_file_path: /home/adev/yolov4-container/YOLO_train/cfg/yolov4.conv.137
+yolov4_best_model: /home/adev/yolov4-container/YOLO_train/cfg/yolov4_2022_01_03.weights
 set_ratio: '0.6'
 batch: '4'
 subdivisions: '4'
@@ -36,4 +36,10 @@ valid_GT_csv: /home/adev/yolov4-container/YOLO_train/cfg/valid_GT.csv
 yolo_valid_csv: yolo_valid.csv
 valid_eval_csv: /home/adev/yolov4-container/YOLO_train/result/valid_eval.csv
 test_eval_csv: /home/adev/yolov4-container/YOLO_train/result/test_eval.csv
-pretrained: /home/adev/yolov4-container/YOLO_train/cfg/yolov4_2022_01_03.weights
+pretrained: /home/adev/yolov4-container/YOLO_train/cfg/yolov4.conv.137
+NMS_flag: 1
+NMS_Iou_threshold: 0.75
+Edge_limit: 10
+inference_Batch_size: 1
+Score_threshold: 0.01
+Iou_threshold: 0.1

@@ -11,10 +11,9 @@ project_name = yml['project_name']
 
 # ================================================================ #
 
-
 # remove before result
-if os.path.exists(os.path.join(YOLO_inference_path, 'test')):
-    shutil.rmtree(os.path.abspath(os.path.join(YOLO_inference_path, 'test')), ignore_errors=True)
-os.mkdir(os.path.join(YOLO_inference_path, 'test'))
-os.mkdir(os.path.join(YOLO_inference_path, 'test', project_name))
-
+if os.path.exists(YOLO_inference_path):
+    shutil.rmtree(os.path.abspath(YOLO_inference_path), ignore_errors=True)
+os.mkdir(YOLO_inference_path)
+os.mkdir(os.path.join(YOLO_inference_path, 'valid'))
+os.mkdir(os.path.join(YOLO_inference_path, 'valid', project_name))

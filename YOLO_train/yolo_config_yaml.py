@@ -90,8 +90,7 @@ if __name__ == "__main__":
     config_dict['YOLO_dataset_path']= os.path.join(current_dir, 'yolov4_dataset')
     config_dict['YOLO_inference_path']   = os.path.join(current_dir, 'result')
 
-    #config_dict['yolov4_model_file_path']  = os.path.join(config_dict['YOLO_config_path'], 'yolov4.conv.137')
-    config_dict['yolov4_model_file_path']  = os.path.join(config_dict['YOLO_config_path'], 'yolov4_2022_01_03.weights')
+    config_dict['yolov4_model_file_path']  = os.path.join(config_dict['YOLO_config_path'], 'yolov4.conv.137')
     config_dict['test_GT_csv']  = os.path.join(config_dict['YOLO_config_path'] , 'test_GT.csv')
     config_dict['valid_GT_csv'] = os.path.join(config_dict['YOLO_config_path'] , 'valid_GT.csv')
 
@@ -102,7 +101,7 @@ if __name__ == "__main__":
 
     config_dict['TRAIN_data_path']  = os.path.join(config_dict['YOLO_dataset_path'], 'train_data')
     config_dict['VAL_data_path']    = os.path.join(config_dict['YOLO_dataset_path'], 'valid_data')
-    config_dict['TEST_data_path']   = os.path.join(config_dict['YOLO_dataset_path'], 'test_data')
+    config_dict['TEST_data_path']   = os.path.join(config_dict['YOLO_dataset_path'], 'valid_data')
 
 
     config_dict['valid_eval_csv']   = os.path.join(config_dict['YOLO_inference_path'], 'valid_eval.csv')
@@ -116,6 +115,7 @@ if __name__ == "__main__":
     config_dict['input_dataset_path']   = os.path.join(config_dict['ORI_dataset_path'], config_dict['project_name'])
 
     # set config (Required)
+    # train
     config_dict['set_ratio']    = check_env(0.6,'set_ratio')
     config_dict['batch']        = check_env(16,'batch')
     config_dict['subdivisions'] = check_env(4,'subdivisions')
@@ -131,6 +131,15 @@ if __name__ == "__main__":
         config_dict['pretrained']   = config_dict['yolov4_model_file_path']
 
     config_dict['Option_config'] = check_env(0,'Option_config')
+
+    # inference
+    config_dict['NMS_flag']             = check_env(1,'NMS_flag')
+    config_dict['NMS_Iou_threshold']    = check_env(0.75,'NMS_Iou_threshold')
+    config_dict['Edge_limit']           = check_env(10,'Edge_limit')
+    config_dict['inference_Batch_size'] = check_env(1,'inference_Batch_size')
+    config_dict['Score_threshold']      = check_env(0.01,'Score_threshold')
+    config_dict['Iou_threshold']        = check_env(0.1,'Iou_threshold')
+
 
     # set config (Optional)
     if os.getenv('Option_config'):

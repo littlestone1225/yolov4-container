@@ -35,9 +35,9 @@ Fun_ConvertConfigResult "$config_result" 1
 
 
 # 4. Prepare inference
-python3 prepare_inference_folder.py
+python3 prepare_validation_folder.py
 
 
-# 6. test inference
-python3 test_inference.py
+# 6. Validation evaluation (continue)
+python3 running_valid_evaluation.py
 

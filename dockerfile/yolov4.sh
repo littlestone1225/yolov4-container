@@ -40,8 +40,8 @@ else
 fi
 echo "VERSION        = "$VERSION
 
-IMAGE_NAME="yolov4:$VERSION"
-CONTAINER_NAME="yolov4_$VERSION"
+IMAGE_NAME="littlestone1225/yolov4:$VERSION"
+CONTAINER_NAME="littlestone1225_yolov4_$VERSION"
 echo "IMAGE_NAME     = "$IMAGE_NAME
 echo "CONTAINER_NAME = "$CONTAINER_NAME
 
