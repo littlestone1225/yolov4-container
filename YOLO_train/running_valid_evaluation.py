@@ -374,55 +374,55 @@ def chkandval(src,VAL_data_path,classes):
     if len(weight_list)>0:
         inference_data = []
         for weight_file in weight_list:
-            #try:
-            os.system(f'mv {os.path.join(YOLO_weight_path, weight_file)} {TMP_weight_path}')
-            Yolo_weights_file = os.path.join(TMP_weight_path, weight_file)
-            now_weights = weight_file.split('.')[0]
-            if now_weights.endswith('_last'): continue
+            try:
+                os.system(f'mv {os.path.join(YOLO_weight_path, weight_file)} {TMP_weight_path}')
+                Yolo_weights_file = os.path.join(TMP_weight_path, weight_file)
+                now_weights = weight_file.split('.')[0]
+                if now_weights.endswith('_last'): continue
 
-            now_Result_folder = os.path.join(Root_data_path, now_weights)
-            print("now processing :", now_Result_folder)
-            Yolo_result_label_json_dir = os.path.join(now_Result_folder, 'label_json_dir')
+                now_Result_folder = os.path.join(Root_data_path, now_weights)
+                print("now processing :", now_Result_folder)
+                Yolo_result_label_json_dir = os.path.join(now_Result_folder, 'label_json_dir')
 
-            make_directory(now_Result_folder , 0 )
-            make_directory(Yolo_result_label_json_dir, 0)
+                make_directory(now_Result_folder , 0 )
+                make_directory(Yolo_result_label_json_dir, 0)
 
-            # load model
-            network, class_names, class_colors = load_darknet(Yolo_cfg_file,Yolo_data_file, \
-                                                                    Yolo_weights_file, Batch_size)
-            print(len(images_list))
-            for img_cnt, img in enumerate(images_list):
+                # load model
+                network, class_names, class_colors = load_darknet(Yolo_cfg_file,Yolo_data_file, \
+                                                                        Yolo_weights_file, Batch_size)
+                print(len(images_list))
+                for img_cnt, img in enumerate(images_list):
 
-                # read image for board
-                I = cv2.imread(os.path.join(VAL_data_path, img))
-                I = cv2.cvtColor(I, cv2.COLOR_BGR2RGB)
-                I = I.astype(np.uint8)
-                print("now process:",img_cnt,img)
+                    # read image for board
+                    I = cv2.imread(os.path.join(VAL_data_path, img))
+                    I = cv2.cvtColor(I, cv2.COLOR_BGR2RGB)
+                    I = I.astype(np.uint8)
+                    print("now process:",img_cnt,img)
 
-                # crop big img to patches
-                crop_rect_list, crop_image_list = spilt_patches(I, width, height, Margin)
-                print("total patches: ",len(crop_image_list))
+                    # crop big img to patches
+                    crop_rect_list, crop_image_list = spilt_patches(I, width, height, Margin)
+                    print("total patches: ",len(crop_image_list))
 
 
-                # detection	
-                if Batch_size == 1 :
-                    yolo_data = image_detection(crop_image_list, crop_rect_list, img, network, \
-                                                        class_names, class_colors, Score_threshold, NMS_flag, \
-                                                        Edge_limit,NMS_Iou_threshold)
-                else : 
-                    yolo_data = batch_detection(crop_image_list, crop_rect_list, img, network, \
-                                                        class_names, class_colors, Score_threshold, NMS_flag, \
-                                                        Edge_limit,NMS_Iou_threshold, .5, .45, Batch_size)
-                print(yolo_data)
-                # change format
-                csv_to_json(yolo_data, VAL_data_path, Yolo_result_label_json_dir, "xmin_ymin_w_h", True)
+                    # detection	
+                    if Batch_size == 1 :
+                        yolo_data = image_detection(crop_image_list, crop_rect_list, img, network, \
+                                                            class_names, class_colors, Score_threshold, NMS_flag, \
+                                                            Edge_limit,NMS_Iou_threshold)
+                    else : 
+                        yolo_data = batch_detection(crop_image_list, crop_rect_list, img, network, \
+                                                            class_names, class_colors, Score_threshold, NMS_flag, \
+                                                            Edge_limit,NMS_Iou_threshold, .5, .45, Batch_size)
+                    print(yolo_data)
+                    # change format
+                    csv_to_json(yolo_data, VAL_data_path, Yolo_result_label_json_dir, "xmin_ymin_w_h", True)
 
-                # record detect bbox
-                write_data_to_YOLO_csv_100(yolo_data,Yolo_result_csv,now_Result_folder,"a")
+                    # record detect bbox
+                    write_data_to_YOLO_csv_100(yolo_data,Yolo_result_csv,now_Result_folder,"a")
 
-                    
-            #except:
-             #   print("error weights:", weight_file)
+                        
+            except:
+                print("error weights:", weight_file)
             
             # evaluation
             empty_all_statistics()
