@@ -6,10 +6,13 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 
-USER="adev"
-UIDCOSTUM="999"
-GIDCOSTUM="998"
 
+USER=$USERNAME
+UIDCOSTUM=$UID
+GIDCOSTUM=$(id -g "$USER")
+echo "USER  = "$USERNAME
+echo "UIDCOSTUM  = "$UIDCOSTUM
+echo "GIDCOSTUM  = "$GIDCOSTUM
 
 # Absolute path to this script.
 # e.g. /home/ubuntu/AOI_PCB_Inference/dockerfile/dockerfile_inference.sh
@@ -90,7 +93,7 @@ then
                     -v /tmp/.X11-unix:/tmp/.X11-unix \
                     -v /etc/localtime:/etc/localtime:ro \
                     --mount type=bind,source=$SCRIPT_DIR/.bashrc,target=/home/$USER/.bashrc \
-                    $IMAGE_NAME /home/$USER/$AOI_DIR_NAME/dockerfile/env_setup.sh" 
+                    $IMAGE_NAME /home/$USER/$AOI_DIR_NAME/dockerfile/run_container.sh" 
              )
     Fun_EvalCmd "${lCmdList[*]}"
 

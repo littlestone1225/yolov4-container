@@ -17,9 +17,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # https://stackoverflow.com/questions/56131677/run-pip-install-there-was-a-problem-confirming-the-ssl-certificate-ssl-certi
 # pip3 install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host=files.pythonhosted.org
 
-RUN rm /etc/apt/sources.list.d/cuda.list && \
-    rm /etc/apt/sources.list.d/nvidia-ml.list && \
-    apt-key del 7fa2af80 && \
+RUN apt-key del 7fa2af80 && \
     apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub && \
     apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub
 
@@ -89,42 +87,35 @@ ENV height=512
 ENV channels=3
 ENV max_batches=500500
 ENV select_cfg="yolov4.cfg"
-ENV pretrained=1
-ENV Option_config=0
-
-ENV momentum=-1
-ENV decay=-1
-ENV angle=-1
-ENV saturation=-1
-ENV exposure=-1
-ENV hue=-1
 ENV learning_rate=-1
-ENV mosaic=-1
-ENV burn_in=-1
-ENV letter_box=-1
-ENV ema_alpha=-1
 
 # inference and valid
 ENV NMS_flag=1
 ENV NMS_Iou_threshold=0.75
-ENV Edge_limit=20
+ENV Edge_limit=10
 ENV inference_Batch_size=1
 ENV Score_threshold=0.001
 ENV Iou_threshold=0.1
 
-RUN echo "Create $USER account" &&\
-    # Create the home directory for the new $USER
-    mkdir -p ${HOME} &&\
-    # Create an $USER so our program doesn't run as root.
-    groupadd -r -g ${GID} ${USER} &&\
-    useradd -r -g ${USER} -G sudo -u ${UID} -d ${HOME} -s /sbin/nologin -c "Docker image user" ${USER} &&\
-    # Set root user no password
-    mkdir -p /etc/sudoers.d &&\
-    echo "$USER ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/${USER} && \
-    chmod 0440 /etc/sudoers.d/${USER} && \
-    # Chown all the files to the $USER
-    sudo chown -R ${USER}:${USER} ${HOME}
+
+# model score
+ENV Precision = 0
+ENV Recall = 0
+ENV F1_score = 0
+
+# RUN echo "Create $USER account" &&\
+#     # Create the home directory for the new $USER
+#     mkdir -p ${HOME} &&\
+#     # Create an $USER so our program doesn't run as root.
+#     groupadd -r -g ${GID} ${USER} &&\
+#     useradd -r -g ${USER} -G sudo -u ${UID} -d ${HOME} -s /sbin/nologin -c "Docker image user" ${USER} &&\
+#     # Set root user no password
+#     mkdir -p /etc/sudoers.d &&\
+#     echo "$USER ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/${USER} && \
+#     chmod 0440 /etc/sudoers.d/${USER} && \
+#     # Chown all the files to the $USER
+#     sudo chown -R ${USER}:${USER} ${HOME}
 
 # Change to the $USER
 WORKDIR ${HOME}
-USER ${USER}
+#USER ${USER}

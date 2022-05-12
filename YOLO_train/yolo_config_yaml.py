@@ -114,7 +114,7 @@ if __name__ == "__main__":
     config_dict['project_name']         = check_env("yolov4_train", "project_name")
     config_dict['input_dataset_path']   = os.path.join(config_dict['ORI_dataset_path'], config_dict['project_name'])
 
-    # set config (Required)
+    # set config 
     # train
     config_dict['set_ratio']    = check_env(0.6,'set_ratio')
     config_dict['batch']        = check_env(16,'batch')
@@ -124,13 +124,7 @@ if __name__ == "__main__":
     config_dict['channels']     = check_env(3,'channels')
     config_dict['max_batches']  = check_env(10000,'max_batches')
     config_dict['select_cfg']   = check_env('yolov4.cfg','select_cfg')
-    
-    if os.getenv('pretrained') == None:
-        config_dict['pretrained']   = '' 
-    else:
-        config_dict['pretrained']   = config_dict['yolov4_model_file_path']
-
-    config_dict['Option_config'] = check_env(0,'Option_config')
+    config_dict['learning_rate'] = check_env(-1,'learning_rate')
 
     # inference
     config_dict['NMS_flag']             = check_env(1,'NMS_flag')
@@ -140,35 +134,12 @@ if __name__ == "__main__":
     config_dict['Score_threshold']      = check_env(0.001,'Score_threshold')
     config_dict['Iou_threshold']        = check_env(0.1,'Iou_threshold')
 
+    # model performance
+    config_dict['Precision']= check_env(0,'Precision')
+    config_dict['Recall']   = check_env(0,'Recall')
+    config_dict['F1_score'] = check_env(0,'F1_score')
 
-    # set config (Optional)
-    if os.getenv('Option_config'):
-    
-        config_dict['momentum']     = check_env(-1,'momentum')
-        config_dict['decay']        = check_env(-1,'decay')
-        config_dict['angle']        = check_env(-1,'angle')
-        config_dict['saturation']   = check_env(-1,'saturation')
-        config_dict['exposure']     = check_env(-1,'exposure')
-        config_dict['hue']          = check_env(-1,'hue')
-        config_dict['learning_rate'] = check_env(-1,'learning_rate')
 
-        config_dict['burn_in'] = check_env(-1,'burn_in')
-        
-        config_dict['mosaic'] = check_env(-1,'mosaic')
-        '''
-        if len(os.getenv('steps')) == len(os.getenv('scales')) and max(os.getenv('steps')) < config_dict['max_batches']:
-            config_dict['steps'] = list(os.getenv('steps'))
-            config_dict['scales'] = list(os.getenv('scales'))
-        else:
-            config_dict['steps'] = [config_dict['max_batches']*0.8, config_dict['max_batches']*0.9]
-            config_dict['scales'] = [0.1,0.1]
-        '''
-        if config_dict['select_cfg'] == 'yolov4-csp.cfg' or config_dict['select_cfg'] == 'yolov4-p6.cfg' :
-            config_dict['letter_box'] = check_env(-1,'letter_box')
-            config_dict['ema_alpha'] = check_env(-1,'ema_alpha')
-        else:
-            config_dict['letter_box'] = -1
-            config_dict['ema_alpha'] = -1
 
 
 

@@ -334,22 +334,6 @@ if __name__ == "__main__":
                     break
     
     
-
-    # optional setting
-    if yml['Option_config'] == '1':
-        if yml['momentum']  != '-1': cfg = replace_by_value('momentum', yml['momentum'], cfg)
-        if yml['decay']     != '-1': cfg = replace_by_value('decay', yml['decay'], cfg)
-        if yml['angle']     != '-1': cfg = replace_by_value('angle', yml['angle'], cfg)
-        if yml['saturation']!= '-1': cfg = replace_by_value('saturation', yml['saturation'], cfg)
-        if yml['exposure']  != '-1': cfg = replace_by_value('exposure', yml['exposure'], cfg)
-        if yml['hue']       != '-1': cfg = replace_by_value('hue', yml['hue'], cfg)
-        if yml['burn_in']   != '-1': cfg = replace_by_value('burn_in', yml['burn_in'], cfg)
-        
-        
-        if yml['select_cfg'] == 'yolov4-csp.cfg' or yml['select_cfg'] == 'yolov4-p6.cfg' :
-            if yml['letter_box'] != '-1': cfg = replace_by_value('letter_box', yml['letter_box'], cfg)
-            if yml['ema_alpha']  != '-1': cfg = replace_by_value('ema_alpha', yml['ema_alpha'], cfg)
-
     with open(Yolo_cfg_file, 'w') as f:
         f.writelines(cfg)
 
