@@ -28,7 +28,7 @@ def ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
 
 def read_config_yaml(config_file):
     config_file_lock = config_file + ".lock"
-    lock = FileLock(config_file_lock, timeout=30)
+    lock = FileLock(config_file_lock, timeout=4)
 
     if os.path.isfile(config_file):
         with lock:
@@ -43,7 +43,7 @@ def read_config_yaml(config_file):
 
 def write_config_yaml(config_file, write_dict):
     config_file_lock = config_file + ".lock"
-    lock = FileLock(config_file_lock, timeout=30)
+    lock = FileLock(config_file_lock, timeout=4)
 
     config_dict = read_config_yaml(config_file)
     for key, value in write_dict.items():
@@ -90,7 +90,6 @@ if __name__ == "__main__":
     config_dict['YOLO_dataset_path']= os.path.join(current_dir, 'yolov4_dataset')
     config_dict['YOLO_inference_path']   = os.path.join(current_dir, 'result')
 
-    config_dict['yolov4_model_file_path']  = os.path.join(config_dict['YOLO_config_path'], 'yolov4.conv.137')
     config_dict['test_GT_csv']  = os.path.join(config_dict['YOLO_config_path'] , 'test_GT.csv')
     config_dict['valid_GT_csv'] = os.path.join(config_dict['YOLO_config_path'] , 'valid_GT.csv')
 
@@ -122,9 +121,18 @@ if __name__ == "__main__":
     config_dict['width']        = check_env(512,'width')
     config_dict['height']       = check_env(512,'height')
     config_dict['channels']     = check_env(3,'channels')
+    config_dict['learning_rate'] = check_env(0.001,'learning_rate')
     config_dict['max_batches']  = check_env(10000,'max_batches')
     config_dict['select_cfg']   = check_env('yolov4.cfg','select_cfg')
-    config_dict['learning_rate'] = check_env(-1,'learning_rate')
+    if config_dict['select_cfg'] == "yolov4.cfg" : 
+        config_dict['pretrained'] = os.path.join(config_dict['YOLO_config_path'], 'yolov4.conv.137')
+    elif config_dict['select_cfg'] == "yolov4-p6.cfg" : 
+        config_dict['pretrained'] = os.path.join(config_dict['YOLO_config_path'], 'yolov4-p6.conv.289')
+    elif config_dict['select_cfg'] == "yolov4-tiny.cfg" : 
+        config_dict['pretrained'] = os.path.join(config_dict['YOLO_config_path'], 'yolov4-tiny.weights')
+    elif config_dict['select_cfg'] == "yolov4-csp.cfg" : 
+        config_dict['pretrained'] = os.path.join(config_dict['YOLO_config_path'], 'yolov4-csp.conv.142')
+    
 
     # inference
     config_dict['NMS_flag']             = check_env(1,'NMS_flag')

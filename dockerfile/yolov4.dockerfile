@@ -99,9 +99,9 @@ ENV Iou_threshold=0.1
 
 
 # model score
-ENV Precision = 0
-ENV Recall = 0
-ENV F1_score = 0
+ENV Precision=0
+ENV Recall=0
+ENV F1_score=0
 
 # RUN echo "Create $USER account" &&\
 #     # Create the home directory for the new $USER
@@ -117,5 +117,5 @@ ENV F1_score = 0
 #     sudo chown -R ${USER}:${USER} ${HOME}
 
 # Change to the $USER
-WORKDIR ${HOME}
-#USER ${USER}
+WORKDIR $HOME
+#USER $USER

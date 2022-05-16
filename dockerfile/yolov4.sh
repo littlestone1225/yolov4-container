@@ -45,8 +45,10 @@ echo "VERSION        = "$VERSION
 
 IMAGE_NAME="littlestone1225/yolov4:$VERSION"
 CONTAINER_NAME="littlestone1225_yolov4_$VERSION"
-echo "IMAGE_NAME     = "$IMAGE_NAME
-echo "CONTAINER_NAME = "$CONTAINER_NAME
+INFERENCE_CONTAINER_NAME="littlestone1225_yolov4_inference"
+echo "IMAGE_NAME               = "$IMAGE_NAME
+echo "CONTAINER_NAME           = "$CONTAINER_NAME
+echo "INFERENCE_CONTAINER_NAME = "$INFERENCE_CONTAINER_NAME
 
 IFS=$'\n'
 function Fun_EvalCmd()
@@ -97,6 +99,23 @@ then
              )
     Fun_EvalCmd "${lCmdList[*]}"
 
+elif [ "$1" = "inference" ]
+then
+    HOST_API_PORT="80"
+
+    lCmdList=(
+                "docker run --gpus all -it \
+                    --privileged \
+                    --ipc=host \
+                    --name $INFERENCE_CONTAINER_NAME \
+                    -v $HOST_AOI_DIR:/home/$USER/$AOI_DIR_NAME \
+                    -v /tmp/.X11-unix:/tmp/.X11-unix \
+                    -v /etc/localtime:/etc/localtime:ro \
+                    --mount type=bind,source=$SCRIPT_DIR/.bashrc,target=/home/$USER/.bashrc \
+                    $IMAGE_NAME /home/$USER/$AOI_DIR_NAME/dockerfile/run_inference.sh" 
+             )
+    Fun_EvalCmd "${lCmdList[*]}"
+
 elif [ "$1" = "exec" ]
 then
     lCmdList=(
@@ -136,6 +155,25 @@ elif [ "$1" = "rmi" ]
 then
     lCmdList=(
                 "docker rmi $IMAGE_NAME"
+             )
+    Fun_EvalCmd "${lCmdList[*]}"
+
+elif [ "$1" = "clean" ]
+then
+    lCmdList=(
+                "sudo rm ../YOLO_train/cfg/train.txt"
+                "sudo rm ../YOLO_train/cfg/valid.txt"
+                "sudo rm ../YOLO_train/cfg/valid_GT.csv"
+                "sudo rm ../YOLO_train/cfg/yolov4.yaml.lock"
+                "sudo rm ../YOLO_train/anchors.txt"
+                "sudo rm ../YOLO_train/chart*"
+                "sudo rm ../YOLO_train/counters_per_class.txt"
+                "sudo rm ../YOLO_train/bad.list"
+                "sudo rm -r ../YOLO_train/yolov4_dataset/"
+                "sudo rm -r ../YOLO_train/result/"
+                "sudo rm -r ../YOLO_train/weights/"
+                "sudo rm -r ../YOLO_train/__pycache__/"
+                #"sudo rm -r ../darknet/"
              )
     Fun_EvalCmd "${lCmdList[*]}"
 

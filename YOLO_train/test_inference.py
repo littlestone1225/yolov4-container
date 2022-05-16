@@ -18,7 +18,10 @@ TEST_data_path = os.path.expanduser(yml['TEST_data_path'])
 YOLO_inference_path = yml['YOLO_inference_path']
 Root_data_path =  os.path.join(yml['YOLO_inference_path'], 'test', project_name)
 
-YOLO_weight_path = yml['yolov4_model_file_path']
+if yml['yolov4_best_model'] == None:
+    YOLO_weight_path = yml['pretrained']
+else:
+    YOLO_weight_path = yml['yolov4_best_model']
 
 Yolo_config_path = yml['YOLO_config_path']
 Yolo_data_file  = os.path.join(Yolo_config_path, project_name+'.data')
@@ -139,7 +142,7 @@ def get_file(root_folder,file_type):
 
 
 if __name__ == '__main__':
-
+    print(YOLO_weight_path)
     now_weights = YOLO_weight_path.split('/')[-1].split('.')[0]
     now_Result_folder = os.path.join(Root_data_path, now_weights)
     print("now processing :", now_Result_folder)
@@ -182,5 +185,7 @@ if __name__ == '__main__':
 
         # record detect bbox
         write_data_to_YOLO_csv_100(yolo_data,Yolo_result_csv,now_Result_folder,"a")
-
+    
+    # free GPU memory
+    free_darknet(network)
     

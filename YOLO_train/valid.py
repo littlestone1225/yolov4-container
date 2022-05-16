@@ -31,7 +31,7 @@ def spilt_patches(img, width,height, margin):
     w_step = width
     sh = list(img.shape)
     if img.shape[0] == height and img.shape[1] == width:
-        print("size == cropped")
+        #print("size == cropped")
         splitted_pos = [[0,0,width,height]]
         splitted_img = [img]
         return splitted_pos, splitted_img

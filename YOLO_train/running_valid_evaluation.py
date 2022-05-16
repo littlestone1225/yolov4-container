@@ -5,32 +5,34 @@ import logging
 import yaml
 from valid import *
 from apscheduler.schedulers.blocking import BlockingScheduler
+import time
+from yolo_config_yaml import write_config_yaml
+
 # ========================== MY CONFIG =========================== #
 
-# read path from yolov4.yaml
+# read config from yolov4.yaml
 yml = yaml.safe_load(open('cfg/yolov4.yaml'))
 
-project_name = yml['project_name']
-
+project_name  = yml['project_name']
 
 VAL_data_path = os.path.expanduser(yml['VAL_data_path'])  
 
 # inference folder
 YOLO_inference_path = yml['YOLO_inference_path']
-Root_data_path =  os.path.join(yml['YOLO_inference_path'], 'valid', project_name)
-inference_csv = os.path.join(Root_data_path , yml['valid_eval_csv'])
+Root_data_path      =  os.path.join(yml['YOLO_inference_path'], 'valid', project_name)
+inference_csv       = os.path.join(Root_data_path , yml['valid_eval_csv'])
 
-YOLO_weight_path = yml['YOLO_weight_path']
-TMP_weight_path = os.path.join(yml['YOLO_weight_path'],'tmp')
+YOLO_weight_path    = yml['YOLO_weight_path']
+TMP_weight_path     = os.path.join(yml['YOLO_weight_path'],'tmp')
 
 
-Yolo_config_path = yml['YOLO_config_path']
-Yolo_data_file  = os.path.join(Yolo_config_path, project_name+'.data')
-Yolo_names_file = os.path.join(Yolo_config_path, project_name+'.names')
-Yolo_cfg_file   = os.path.join(Yolo_config_path, project_name+'.cfg')
+Yolo_config_path    = yml['YOLO_config_path']
+Yolo_data_file      = os.path.join(Yolo_config_path, project_name+'.data')
+Yolo_names_file     = os.path.join(Yolo_config_path, project_name+'.names')
+Yolo_cfg_file       = os.path.join(Yolo_config_path, project_name+'.cfg')
 
-Yolo_result_csv =  yml['yolo_valid_csv']
-VALID_GT_csv = os.path.join(Yolo_config_path , yml['valid_GT_csv'])
+Yolo_result_csv     = yml['yolo_valid_csv']
+VALID_GT_csv         = os.path.join(Yolo_config_path , yml['valid_GT_csv'])
 
 
 with open(Yolo_names_file) as f:
@@ -52,16 +54,19 @@ Batch_size = int(yml['inference_Batch_size'])
 # inference
 Score_threshold = float(yml['Score_threshold'])
 Iou_threshold = float(yml['Iou_threshold'])
+
 #######################################################################
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def empty_all_statistics():
+def empty_all_statistics(classes):
     global truth_dict, truth_tp_dict, truth_tp_wrong_category_dict, truth_fn_dict
     global infer_dict, infer_tp_dict, infer_tp_wrong_category_dict, infer_fp_dict
 
+        
+    
     """
     Ground Truth Statistics
     1. truth_dict                   : all of the ground truth
@@ -73,10 +78,12 @@ def empty_all_statistics():
            the sum of truth_tp_wrong_category_dict = the sum of infer_tp_wrong_category_dict
            Combine 'empty', 'appearance_less' and 'appearance_hole' of ground truth label statistics into 'appearance_less' of ground truth statistics
     """
-    truth_dict                   = {'bridge': 0, 'elh': 0, 'excess_solder': 0, 'appearance': 0}
-    truth_tp_dict                = {'bridge': 0, 'elh': 0, 'excess_solder': 0, 'appearance': 0}
-    truth_tp_wrong_category_dict = {'bridge': 0, 'elh': 0, 'excess_solder': 0, 'appearance': 0}
-    truth_fn_dict                = {'bridge': 0, 'elh': 0, 'excess_solder': 0, 'appearance': 0}
+    truth_dict                   = {}
+    truth_tp_dict                = {}
+    truth_tp_wrong_category_dict = {}
+    truth_fn_dict                = {}
+
+    
 
     """
     Inference Result Statistics
@@ -89,10 +96,24 @@ def empty_all_statistics():
            the sum of truth_tp_wrong_category_dict = the sum of infer_tp_wrong_category_dict
            Combine 'empty', 'appearance_less' and 'appearance_hole' of ground truth label statistics into 'appearance_less' of inference result statistics
     """
-    infer_dict                   = {'bridge': 0, 'elh': 0, 'excess_solder': 0, 'appearance': 0}
-    infer_tp_dict                = {'bridge': 0, 'elh': 0, 'excess_solder': 0, 'appearance': 0}
-    infer_tp_wrong_category_dict = {'bridge': 0, 'elh': 0, 'excess_solder': 0, 'appearance': 0}
-    infer_fp_dict                = {'bridge': 0, 'elh': 0, 'excess_solder': 0, 'appearance': 0}
+    infer_dict                   = {}
+    infer_tp_dict                = {}
+    infer_tp_wrong_category_dict = {}
+    infer_fp_dict                = {}
+
+
+    for cls in classes:
+        truth_dict[cls] = 0
+        truth_tp_dict[cls] = 0
+        truth_tp_wrong_category_dict[cls] = 0
+        truth_fn_dict[cls] = 0
+
+        infer_dict[cls] = 0
+        infer_tp_dict[cls] = 0
+        infer_tp_wrong_category_dict[cls] = 0
+        infer_fp_dict[cls] = 0
+
+
 
 def dict_to_str(dict_obj):
     """
@@ -116,6 +137,8 @@ def get_normal_recall(truth_dict, truth_tp_dict, truth_tp_wrong_category_dict, t
     for key in truth_dict:
         TP = TP + truth_tp_dict[key] + truth_tp_wrong_category_dict[key]
         FN = FN + truth_fn_dict[key]
+    if TP  + FN == 0 :
+        return 0
     recall = round(TP / (TP + FN), 3)
     return recall
 
@@ -125,6 +148,8 @@ def get_normal_precision(infer_dict, infer_tp_dict, infer_tp_wrong_category_dict
     for key in infer_dict:
         TP = TP + infer_tp_dict[key] + infer_tp_wrong_category_dict[key]
         FP = FP + infer_fp_dict[key]
+    if TP + FP == 0  :
+        return 0
     precision = round(TP / (TP + FP), 3)
     return precision
 
@@ -153,7 +178,7 @@ def output_result(result_dir):
     logging.info("= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = ")
     
     #write_row = [result_dir.split("_")[-1],Yolo_result_csv,truth_fn_dict,infer_fp_dict,normal_recall,normal_precision]
-    write_row = [result_dir.split("_")[-1],os.path.join(result_dir,Yolo_result_csv),
+    write_row = [result_dir.split("/")[-1]+".weights" , os.path.join(result_dir,Yolo_result_csv),
                  sum(truth_fn_dict.values()),sum(infer_fp_dict.values()),
                  normal_recall,normal_precision]
 
@@ -366,13 +391,37 @@ def get_file(root_folder,file_type):
     return file_list
 
 
+def check_file_completed(file_list):
+    
+    file_size_list = []
+    for filename in file_list:
+        if filename.split('.')[0].endswith('_last'): continue
+
+        file_path = os.path.join(YOLO_weight_path, filename)
+        file_size_list.append([file_path,os.path.getsize(file_path)])
+        print([file_path,os.path.getsize(file_path)])
+
+    #time.sleep(0.2)
+    del_idx = []
+    for idx,[filename,filesize] in enumerate(file_size_list):
+        if filesize != os.path.getsize(filename):
+            del_idx.append(idx)
+    del_idx.reverse()
+    for idx in del_idx:
+        del file_list[idx]
+    return file_list
+
 def chkandval(src,VAL_data_path,classes):
     weight_list = get_file(src,'.weights')
     images_list = get_file(VAL_data_path,'.jpg')
     make_directory(TMP_weight_path, 0 )
 
+    # check model file is saved completely
+    weight_list = check_file_completed(weight_list)
+    
     if len(weight_list)>0:
         inference_data = []
+        
         for weight_file in weight_list:
             try:
                 os.system(f'mv {os.path.join(YOLO_weight_path, weight_file)} {TMP_weight_path}')
@@ -413,39 +462,75 @@ def chkandval(src,VAL_data_path,classes):
                         yolo_data = batch_detection(crop_image_list, crop_rect_list, img, network, \
                                                             class_names, class_colors, Score_threshold, NMS_flag, \
                                                             Edge_limit,NMS_Iou_threshold, .5, .45, Batch_size)
-                    print(yolo_data)
+                    print("yolo_data",len(yolo_data))
                     # change format
                     csv_to_json(yolo_data, VAL_data_path, Yolo_result_label_json_dir, "xmin_ymin_w_h", True)
 
                     # record detect bbox
                     write_data_to_YOLO_csv_100(yolo_data,Yolo_result_csv,now_Result_folder,"a")
-
+                
+                
                         
             except:
                 print("error weights:", weight_file)
             
+            # free GPU memory
+            free_darknet(network)
+
             # evaluation
-            empty_all_statistics()
+            empty_all_statistics(classes)
             compare_GT_YOLO(now_Result_folder)
-            inference_dict = output_result(now_Result_folder) ### inference_dict is model info #####
+            inference_dict = output_result(now_Result_folder) 
             
             inference_data.append(inference_dict)
-
-            # upload and remove model 
-            os.remove(Yolo_weights_file)
             
-            free_darknet(network)
             
-        # store each model inference result
+            
         inference_data.sort()  
+        
+        # store each model inference result
         write_inference_data(inference_data,inference_csv,"a")
+            
+        select_model_name = ""
+        for inference_info in inference_data:
+            recall = float(inference_info[-2])
+            precision = float(inference_info[-1])
+            if recall * precision == 0 : continue
+            F1_score = 2*(recall*precision) / (recall+precision)
+            
+            config_dict = yaml.safe_load(open('cfg/yolov4.yaml'))
+            best_F1_score = float(config_dict['F1_score'])
+            if F1_score >= best_F1_score:
+                
+                select_model_name = inference_info[0]
+                best_F1_score = F1_score
+                
+                # model performance
+                config_dict['Precision']= precision
+                config_dict['Recall']   = recall
+                config_dict['F1_score'] = F1_score
+                config_dict['yolov4_best_model'] = os.path.join(TMP_weight_path, select_model_name)
+                
+
+        # remove not select model 
+        for model_name in weight_list:
+            now_model = os.path.join(TMP_weight_path, model_name)
+            if model_name != select_model_name:
+                os.remove(now_model)
+                
+            else: 
+                ######## update now_model to AIFS-server ################
+                write_config_yaml('cfg/yolov4.yaml', config_dict)
+                print("now_select_model : ", select_model_name)
+                
+        
 
 
 if __name__ == '__main__':
 
 
     scheduler = BlockingScheduler(timezone='Asia/Taipei')
-    scheduler.add_job(chkandval, 'interval', seconds=4 , \
+    scheduler.add_job(chkandval, 'interval', seconds=30, \
             kwargs={'src':YOLO_weight_path ,'VAL_data_path':VAL_data_path, 'classes':classes})
     print('Press Ctrl+{0} to exit'.format('Break' if os.name == 'nt' else 'C'))
 

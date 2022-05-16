@@ -165,49 +165,6 @@ def generate_yolo_dataset(input_image_path, target_path, set_ratio = 0.8):
             shutil.copyfile(os.path.join(input_image_path, img_name), os.path.join(set_path, img_name))
 
 
-    '''
-    for class_name in defects:
-        now_dir = os.path.join(input_image_path,class_name)
-        image_list = get_file(now_dir,"jpg")
-        
-        random.shuffle(image_list)
-
-        for idx in range(len(image_list)):
-            file_name = image_list[idx].split('.', 1 )[0]
-            img_name = image_list[idx]
-            json_name = os.path.join(now_dir, file_name+".json")
-            json_array = json.load(open(json_name)) 
-
-            if float(idx)/float(len(image_list)) < set_ratio:
-                set_path = Yolo_train_set_path
-                if img_name not in train_set:
-                    train_set.append([img_name,json_name])
-            else:
-                set_path = Yolo_valid_set_path
-                if img_name not in valid_set:
-                    valid_set.append([img_name,json_name])
-            
-            # generate yolo format txt
-            fp = open(os.path.join(set_path, file_name+".txt"), "a")
-            for item in json_array['shapes']:
-                category_id = defects.index(item['label'])
-                [bbox_l,bbox_t] = item['points'][0][:]
-                [bbox_r,bbox_b] = item['points'][1][:]
-                yolo_x = ((float(bbox_l)+float(bbox_r))/2) / width
-                yolo_y = ((float(bbox_t)+float(bbox_b))/2) / height
-                yolo_w = (abs(float(bbox_l)-float(bbox_r))) / width
-                yolo_h = (abs(float(bbox_t)-float(bbox_b))) / height
-
-                fp.write("%s %f %f %f %f\n" % (category_id, yolo_x, yolo_y, yolo_w, yolo_h))
-
-            fp.close()
-            
-            # copy image to train set and valid set
-            
-            if not os.path.exists(os.path.join(set_path, img_name)):
-                shutil.copyfile(os.path.join(now_dir, img_name), os.path.join(set_path, img_name))
-    '''
-
     return train_set, valid_set, defects
 
 
@@ -230,7 +187,7 @@ if __name__ == "__main__":
     if now_best_model and os.path.exists(now_best_model):
         print("Use best model:",now_best_model)     
     else:
-        now_best_model = yml['yolov4_model_file_path']
+        now_best_model = yml['pretrained']
         print("Use yolov4 pre-trained model:", now_best_model)
 
 
@@ -309,7 +266,9 @@ if __name__ == "__main__":
     cfg = replace_by_value('width', yml['width'], cfg)
     cfg = replace_by_value('height', yml['height'], cfg)
     cfg = replace_by_value('channels', yml['channels'], cfg)
-    cfg = replace_by_value('learning_rate', yml['learning_rate'], cfg)
+
+    if yml['learning_rate'] != -1:
+        cfg = replace_by_value('learning_rate', yml['learning_rate'], cfg)
 
 
     if yml['max_batches']:
@@ -330,17 +289,20 @@ if __name__ == "__main__":
             for ii in range(idx, 0, -1):
                 cfg[ii] = cfg[ii].replace(" ", "")
                 if "filters=" in cfg[ii]: 
-                    cfg[ii] = "filters="+str(int((classes + 5)*3))+"\n"
+                    if yml['select_cfg'] == "yolov4-p6.cfg":
+                        cfg[ii] = "filters="+str(int((classes + 5)*4))+"\n"
+                    else:
+                        cfg[ii] = "filters="+str(int((classes + 5)*3))+"\n"
+                    
                     break
     
     
-    with open(Yolo_cfg_file, 'w') as f:
-        f.writelines(cfg)
-
-
     # 8.prepare GT
     valid_GT_data = get_json_data(valid_set)
     valid_defect_count = write_inference_data(valid_GT_data,valid_GT_csv,'w')
     print("valid_defect_count: ",valid_defect_count)
 
 
+    # write config file
+    with open(Yolo_cfg_file, 'w') as f:
+        f.writelines(cfg)

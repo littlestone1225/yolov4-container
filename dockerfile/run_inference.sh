@@ -41,7 +41,7 @@ function Fun_EvalCmd()
 lCmdList=(
             "cd $AOI_DIR" \
             #"git clone -b advan_pcb https://github.com/tkyen1110/darknet.git"
-            "sudo git clone https://github.com/littlestone1225/darknet.git"
+            "git clone https://github.com/littlestone1225/darknet.git"
          )
 Fun_EvalCmd "${lCmdList[*]}"
 echo ""
@@ -56,8 +56,8 @@ then
     lCmdList=(
                 "cd $AOI_DIR/darknet" \
                 "export AOI_DIR_NAME=$AOI_DIR" \
-                "sudo make clean" \
-                "sudo make"
+                "make clean" \
+                "make"
              )
     Fun_EvalCmd "${lCmdList[*]}"
 else
@@ -65,4 +65,15 @@ else
 fi
 echo ""
 
-/bin/bash
+
+
+
+##################################
+# ****  Train/Valid YOLOv4  **** #
+##################################
+lCmdList=(
+            "cd $AOI_DIR/YOLO_train/" \
+            "./inference.sh"
+            )
+Fun_EvalCmd "${lCmdList[*]}"
+
