@@ -51,9 +51,10 @@ then
     YOLOV4_BEST_MODEL="$PRETRAINED"  
 fi
 
-echo "$YOLO_DARKNET_PATH"/darknet detector train "$YOLO_CONFIG_PATH"/"$PROJECT_NAME".data "$YOLO_CONFIG_PATH"/"$PROJECT_NAME".cfg "$YOLOV4_BEST_MODEL" -dont_show -clear 1  #> /dev/null 2>&1 & #-gpus 1 -map
 
+echo "$YOLO_DARKNET_PATH"/darknet detector train "$YOLO_CONFIG_PATH"/"$PROJECT_NAME".data "$YOLO_CONFIG_PATH"/"$PROJECT_NAME".cfg "$YOLOV4_BEST_MODEL" -dont_show -clear 1  #> /dev/null 2>&1 & #-gpus 1 -map
 "$YOLO_DARKNET_PATH"/darknet detector train "$YOLO_CONFIG_PATH"/"$PROJECT_NAME".data "$YOLO_CONFIG_PATH"/"$PROJECT_NAME".cfg "$YOLOV4_BEST_MODEL" -dont_show -clear 1 > /dev/null 2>&1 & #-gpus 1 -map
+
 
 # 6. Validation evaluation (continue)
 python3 running_valid_evaluation.py #> /dev/null 2>&1 &

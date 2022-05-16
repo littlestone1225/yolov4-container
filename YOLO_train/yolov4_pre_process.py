@@ -57,7 +57,7 @@ valid_GT_csv = os.path.join(Yolo_config_path, yml['valid_GT_csv'])
 
 # ================================================================ #
 
-def write_inference_data(data,result_csv,method):
+def write_inference_data(data,result_csv,method,defects):
     defect_types_count_list = np.zeros(len(defects))
     # CSV
     with open(result_csv, method, newline='') as csvFile:
@@ -69,7 +69,7 @@ def write_inference_data(data,result_csv,method):
             writer.writerow(d)
     return defect_types_count_list
     
-def get_json_data(file_list):
+def get_json_data(file_list,defects):
 
     bbox_data = []
     for img_name,json_name in file_list:
@@ -267,7 +267,7 @@ if __name__ == "__main__":
     cfg = replace_by_value('height', yml['height'], cfg)
     cfg = replace_by_value('channels', yml['channels'], cfg)
 
-    if yml['learning_rate'] != -1:
+    if yml['learning_rate'] != '-1':
         cfg = replace_by_value('learning_rate', yml['learning_rate'], cfg)
 
 
@@ -295,14 +295,15 @@ if __name__ == "__main__":
                         cfg[ii] = "filters="+str(int((classes + 5)*3))+"\n"
                     
                     break
-    
-    
-    # 8.prepare GT
-    valid_GT_data = get_json_data(valid_set)
-    valid_defect_count = write_inference_data(valid_GT_data,valid_GT_csv,'w')
-    print("valid_defect_count: ",valid_defect_count)
-
 
     # write config file
     with open(Yolo_cfg_file, 'w') as f:
         f.writelines(cfg)
+    
+    # 8.prepare GT
+    valid_GT_data = get_json_data(valid_set,defects)
+    valid_defect_count = write_inference_data(valid_GT_data,valid_GT_csv,'w',defects)
+    print("valid_defect_count: ",valid_defect_count)
+
+
+    
