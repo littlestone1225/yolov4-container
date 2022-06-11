@@ -7,10 +7,10 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 
 
-USER=$USERNAME
+USER=$USER
 UIDCOSTUM=$UID
 GIDCOSTUM=$(id -g "$USER")
-echo "USER  = "$USERNAME
+echo "USER  = "$USER
 echo "UIDCOSTUM  = "$UIDCOSTUM
 echo "GIDCOSTUM  = "$GIDCOSTUM
 
@@ -94,6 +94,7 @@ then
                     -v $HOST_AOI_DIR:/home/$USER/$AOI_DIR_NAME \
                     -v /tmp/.X11-unix:/tmp/.X11-unix \
                     -v /etc/localtime:/etc/localtime:ro \
+                    --env-file /home/$USER/$AOI_DIR_NAME/dockerfile/env.list \
                     --mount type=bind,source=$SCRIPT_DIR/.bashrc,target=/home/$USER/.bashrc \
                     $IMAGE_NAME /home/$USER/$AOI_DIR_NAME/dockerfile/run_container.sh" 
              )
@@ -112,6 +113,7 @@ then
                     -v /tmp/.X11-unix:/tmp/.X11-unix \
                     -v /etc/localtime:/etc/localtime:ro \
                     --mount type=bind,source=$SCRIPT_DIR/.bashrc,target=/home/$USER/.bashrc \
+                    --env-file /home/$USER/$AOI_DIR_NAME/dockerfile/env.list \
                     $IMAGE_NAME /home/$USER/$AOI_DIR_NAME/dockerfile/run_inference.sh" 
              )
     Fun_EvalCmd "${lCmdList[*]}"
